@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmComponent } from 'src/app/modules/shared/components/confirm/confirm.component';
 import { CategoryService } from 'src/app/modules/shared/services/category.service';
 import { NewCategoryComponent } from '../new-category/new-category.component';
 
@@ -58,12 +59,55 @@ export class CategoryComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result == 1) {
-        this.openSnackBar("Categoría creada correctamente", "Vale");
+        this.openSnackBar("Categoría creada correctamente.", "Vale");
         this.getCategories();
       }else if(result == 2) {
-        this.openSnackBar("Se produjo un error al crear la categoría", "Vale");
+        this.openSnackBar("Se produjo un error al crear la categoría.", "Vale");
       }
     });
+  }
+
+  edit(id: number, name: string, description: string) {
+    const dialogRef = this.dialog.open(NewCategoryComponent, {
+      width: "500px",
+      data: {id: id, name: name, description: description}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result == 1) {
+        this.openSnackBar("Categoría actualizada correctamente.", "Vale");
+        this.getCategories();
+      }else if(result == 2) {
+        this.openSnackBar("Se produjo un error al actualizar la categoría.", "Vale");
+      }
+    });
+  }
+
+  delete(id: any) {
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      width: "500px",
+      data: {id: id}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result == 1) {
+        this.openSnackBar("Categoría eliminada correctamente.", "Vale");
+        this.getCategories();
+      }else if(result == 2) {
+        this.openSnackBar("Se produjo un error al eliminar la categoría.", "Vale");
+      }
+    });
+  }
+
+  buscar(termino: string) {
+    if (termino.length === 0) {
+      return this.getCategories();
+    }
+
+    this.categoryService.getCategoryById(termino)
+        .subscribe((resp:any) => {
+          this.processCategoriesResponse(resp);
+        })
   }
 
   openSnackBar(message: string, action: string) : MatSnackBarRef<SimpleSnackBar> {
