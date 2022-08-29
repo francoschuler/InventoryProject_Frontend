@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { enableProdMode, Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 const base_url = environment.base_url;
@@ -25,6 +25,30 @@ export class ProductService {
   saveProduct(body: any) {
     const endpoint = `${base_url}/products`;
     return this.http.post(endpoint, body);
+  }
+
+  /**
+   * Updates a product
+   */
+  updateProduct(body:any, id:any){
+    const endpoint = `${base_url}/products/${id}`;
+    return this.http.put(endpoint, body);
+  }
+
+  /**
+   * Deletes a product
+   */
+  deleteProduct(id:any){
+    const endpoint = `${base_url}/products/${id}`;
+    return this.http.delete(endpoint);
+  }
+
+  /**
+   * Searches products by name
+   */
+  getProductByName(name: any) {
+    const endpoint = `${base_url}/products/filter/${name}`;
+    return this.http.get(endpoint);
   }
 }
 
