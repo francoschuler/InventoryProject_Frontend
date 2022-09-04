@@ -40,18 +40,27 @@ export class CategoryService {
    * Deletes a category
    */
 
-     deleteCategory(id: any) {
+    deleteCategory(id: any) {
       const endpoint = `${base_url}/categories/${id}`;
       return this.http.delete(endpoint);
     }
 
-        /**
+  /**
    * Gets category by id
    */
-
     getCategoryById(id: any) {
-    const endpoint = `${base_url}/categories/${id}`;
-    return this.http.get(endpoint);
+      const endpoint = `${base_url}/categories/${id}`;
+      return this.http.get(endpoint);
+    }
+
+    /**
+     * Exports all categories to Excel
+     */
+    exportCategories() {
+      const endpoint = `${base_url}/categories/export/excel`;
+      return this.http.get(endpoint, {
+        responseType: 'blob'
+      });
   }
 
 }
